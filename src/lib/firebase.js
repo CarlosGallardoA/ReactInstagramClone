@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 import { getFirestore } from "firebase/firestore";
 // import { seedDatabase } from "../seed";
 const firebaseConfig = {
@@ -14,6 +16,8 @@ const firebaseConfig = {
 const firebase = initializeApp(firebaseConfig);
 
 const FildValue = getFirestore();
+
+export const auth = getAuth(firebase);
 
 // seedDatabase(FildValue);
 export { firebase, FildValue };
