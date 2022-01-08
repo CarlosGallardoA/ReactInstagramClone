@@ -11,10 +11,9 @@ const Header = () => {
   const { user } = useContext(UserContext);
   const { firebase } = useContext(FirebaseContext);
   const navigate = useNavigate();
-  console.log(user);
   return (
     <header className="h-16 bg-white border-b border-gray-primary mb-8">
-      <div className="container mx-auto max-w-screen-lg h-full">
+      <div className="container mx-auto lg:max-w-screen-lg h-full sm:max-w-screen-sm md:max-w-screen-md">
         <div className="flex justify-between h-full">
           <div className="text-gray-background text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
