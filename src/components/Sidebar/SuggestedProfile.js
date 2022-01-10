@@ -1,10 +1,22 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  updateFollowedUserFollowers,
+  updateLoggedInUserFollowing,
+} from "../../services/firebase";
 
-const SuggestedProfile = ({ userDocId, username, profileId, userId }) => {
+const SuggestedProfile = ({
+  profileDocId,
+  username,
+  profileId,
+  userId,
+  loggedInUserDocId,
+}) => {
   const [followed, setFollowed] = useState(false);
   const handleFollowUser = async () => {
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
+    await updateFollowedUserFollowers(profileDocId, userId, false);
     setFollowed(true);
   };
   return !followed ? (
@@ -37,8 +49,9 @@ const SuggestedProfile = ({ userDocId, username, profileId, userId }) => {
 export default SuggestedProfile;
 
 SuggestedProfile.propTypes = {
-  userDocId: PropTypes.string,
+  profileDocId: PropTypes.string,
   username: PropTypes.string,
   profileId: PropTypes.string,
   userId: PropTypes.string,
+  loggedInUserDocId: PropTypes.string,
 };

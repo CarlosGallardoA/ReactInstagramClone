@@ -1,4 +1,14 @@
-import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  limit,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { firebase, FildValue } from "../lib/firebase";
 
 export async function doesUsernameExist(username) {
@@ -37,4 +47,54 @@ export async function getSuggestedProfiles(userId, following) {
         profile.userId !== userId && !following.includes(profile.userId)
     );
   return profiles;
+}
+
+export async function updateLoggedInUserFollowing(
+  loggedInUserDocId,
+  profileId,
+  isFollowingProfile
+) {
+  const docRef = doc(FildValue, "users", loggedInUserDocId);
+  await updateDoc(docRef, {
+    following: isFollowingProfile
+      ? arrayRemove(profileId)
+      : arrayUnion(profileId),
+  });
+}
+
+export async function updateFollowedUserFollowers(
+  profileDocId,
+  loggedInUserDocId,
+  isFollowingProfile
+) {
+  const docRef = doc(FildValue, "users", profileDocId);
+  await updateDoc(docRef, {
+    followers: isFollowingProfile
+      ? arrayRemove(loggedInUserDocId)
+      : arrayUnion(loggedInUserDocId),
+  });
+}
+
+export async function getPhotos(userId, following) {
+  const result = query(
+    collection(FildValue, "photos"),
+    where("userId", "in", following)
+  );
+  const snapshot = await getDocs(result);
+  const photos = snapshot.docs.map((photo) => ({
+    ...photo.data(),
+    docId: photo.id,
+  }));
+  const photosWithUserDetails = await Promise.all(
+    photos.map(async (photo) => {
+      let userLinkedPhoto = false;
+      if (photo.likes.includes(userId)) {
+        userLinkedPhoto = true;
+      }
+      const user = await getUserByUserId(photo.userId);
+      const { username } = user[0];
+      return { username, ...photo, userLinkedPhoto };
+    })
+  );
+  return photosWithUserDetails;
 }
