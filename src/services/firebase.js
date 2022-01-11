@@ -20,6 +20,19 @@ export async function doesUsernameExist(username) {
   return snapshot.docs.map((user) => user.data().length > 0);
 }
 
+export async function getUserByUsername(username) {
+  const users = query(
+    collection(FildValue, "users"),
+    where("username", "==", username)
+  );
+  const snapshot = await getDocs(users);
+  const user = snapshot.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id,
+  }));
+  return user.length > 0 ? user : false;
+}
+
 // get user from the firebase where userId === user.uid
 export async function getUserByUserId(userId) {
   const result = query(
@@ -97,4 +110,17 @@ export async function getPhotos(userId, following) {
     })
   );
   return photosWithUserDetails;
+}
+
+export async function getUserPhotosByUsername(username) {
+  const [user] = await getUserByUsername(username);
+  const result = query(
+    collection(FildValue, "photos"),
+    where("userId", "==", user.userId)
+  );
+  const snapshot = await getDocs(result);
+  return snapshot.docs.map((item) => ({
+    ...item.data(),
+    docId: item.id,
+  }));
 }
