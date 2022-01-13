@@ -1,3 +1,9 @@
+# Preview
+
+[![Screenshot-1.png](https://i.postimg.cc/DzpZKc06/Screenshot-1.png)](https://postimg.cc/Z93Z8prv)
+
+[![Screenshot-2.png](https://i.postimg.cc/Y2WSJYHN/Screenshot-2.png)](https://postimg.cc/MXzxBcXX)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
